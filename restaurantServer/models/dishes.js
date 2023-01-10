@@ -8,7 +8,7 @@ const commentSchema = new Schema({
         type: Number,
         min:1,
         max: 5,
-        require: true
+        required: true
     },
     comment: {
         type: String,
@@ -16,7 +16,7 @@ const commentSchema = new Schema({
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'User', 
     }
 },{
     timestamps: true
