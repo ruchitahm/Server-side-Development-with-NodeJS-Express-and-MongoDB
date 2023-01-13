@@ -9,7 +9,7 @@ var authenticate = require('../authenticate');
 const cors = require('./cors');
 
 const favoriteRouter = express.Router();
-
+ 
 favoriteRouter.use(bodyParser.json());
 
 favoriteRouter.route('/')

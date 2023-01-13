@@ -5,7 +5,7 @@ const app = express();
 const whitelist = ['http://localhost:3000', 'https://localhost:3443','http://localhost:3001','http://localhost:3002','http://localhost:3003','http://localhost:3002','http://ruchitalaptop.local:3000','http://ruchitalaptop.local:3001'];
 // var corsOptionsDelegate = (req, callback) => {
     // var corsOptions;
-
+ 
     // if(whitelist.indexOf(req.header('Origin')) !== -1){
     //     corsOptions = { origin: true };
     // }
