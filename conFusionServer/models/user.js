@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+
 var passportLocalMongoose = require('passport-local-mongoose');
 
 var User = new Schema({
@@ -11,11 +12,11 @@ var User = new Schema({
       type: String,
         default: ''
     },
-    facebookId: String,
     admin:   {
         type: Boolean,
         default: false
-    }
+    },
+    facebookId: String,
 });
 
 User.plugin(passportLocalMongoose);

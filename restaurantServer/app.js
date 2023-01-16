@@ -21,12 +21,12 @@ var commentRouter = require('./routes/commentRouter');
 
 const mongoose = require('mongoose');
 const Dishes = require('./models/dishes');
-const cors = require('cors');
+// const cors = require('cors');
 
 // const Promotions = require('./models/promotions');
 // const Leaders = require('./models/leaders')
-// const url = 'mongodb://localhost:27017/restaurant';
-const url = config.mongoUrl;
+const url = 'mongodb://localhost:27017/restaurant';
+// const url = config.mongoUrl;
 const connect = mongoose.connect(url);
 
 connect.then((db) => {
@@ -59,7 +59,7 @@ app.use(express.urlencoded({ extended: false }));
 //   resave: false,
 //   store: new FileStore()
 // }));
-app.use(cors());
+// app.use(cors());
 app.use(passport.initialize());
 // app.use(passport.session());
 

@@ -1,18 +1,28 @@
 var express = require('express');
 var router = express.Router();
-
 const bodyParser = require('body-parser');
 var User = require('../models/user');
-
 var passport = require('passport');
 var authenticate = require('../authenticate');
-const cors = require('./cors');
+var cors = require('./cors');
 
 router.use(bodyParser.json());
 
-router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); } );
-
 /* GET users listing. */
+// router.get('/', function(req, res, next) {
+//   res.send('respond with a resource');
+// });
+router.options('*', cors.corsWithOptions, (req, res, next) => { res.sendStatus(200); } )
+// router.get('/', cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next) => {
+//   User.find({})
+//   .then((users) => {
+//     res.statusCode = 200;
+//     res.setHeader('Content-Type', 'application/json');
+//     res.json(users);
+//   }, (err) => next(err))
+//   .catch((err) => next(err));
+// });
+
 router.get('/', cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next) => {
   User.find({})
   .then((users) => {
@@ -20,10 +30,15 @@ router.get('/', cors.corsWithOptions, authenticate.verifyUser, authenticate.veri
       res.setHeader('Content-Type', 'application/json');
       res.json(users);
   }, (err) => next(err))
-  .catch((err) => next(err));
+  .catch((err) => {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({err: err});
+  })
+  // next(err));
 });
 
-router.post('/signup', cors.corsWithOptions, (req, res, next) => {
+router.post('/signup',cors.corsWithOptions, (req, res, next) => {
   User.register(new User({username: req.body.username}), 
     req.body.password, (err, user) => {
     if(err) {
@@ -32,12 +47,12 @@ router.post('/signup', cors.corsWithOptions, (req, res, next) => {
       res.json({err: err});
     }
     else {
-      if (req.body.firstname)
+      if(req.body.firstname)
         user.firstname = req.body.firstname;
-      if (req.body.lastname)
+      if(req.body.lastname)
         user.lastname = req.body.lastname;
       user.save((err, user) => {
-        if (err) {
+        if(err){
           res.statusCode = 500;
           res.setHeader('Content-Type', 'application/json');
           res.json({err: err});
@@ -48,12 +63,13 @@ router.post('/signup', cors.corsWithOptions, (req, res, next) => {
           res.setHeader('Content-Type', 'application/json');
           res.json({success: true, status: 'Registration Successful!'});
         });
-      });
+      })
     }
   });
 });
 
 router.post('/login', cors.corsWithOptions, (req, res, next) => {
+
   passport.authenticate('local', (err, user, info) => {
     if (err)
       return next(err);
@@ -78,7 +94,7 @@ router.post('/login', cors.corsWithOptions, (req, res, next) => {
   }) (req, res, next);
 });
 
-router.get('/logout', cors.corsWithOptions, (req, res) => {
+router.get('/logout', (req, res) => {
   if (req.session) {
     req.session.destroy();
     res.clearCookie('session-id');
@@ -100,7 +116,7 @@ router.get('/facebook/token', passport.authenticate('facebook-token'), (req, res
   }
 });
 
-router.get('/checkJWTToken', cors.corsWithOptions, (req, res) => {
+router.get('/checkJWTtoken', cors.corsWithOptions, (req, res) => {
   passport.authenticate('jwt', {session: false}, (err, user, info) => {
     if (err)
       return next(err);
